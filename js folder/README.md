@@ -13,6 +13,28 @@ Live demo: http://arpitasarker04.github.io/Petal-Purse--Expanse-Tracking-App/
 - Receipt-style ledger of every expense with one-tap delete
 - Fully responsive, keyboard-accessible, and respects reduced-motion preferences
 
+## How it works
+
+**Project structure**
+
+```mermaid
+flowchart TD
+    A[index.html] -->|links| B[css/style.css]
+    A -->|loads| C[js/app.js]
+    C -->|reads/writes| D[(localStorage)]
+    C -->|updates| A
+```
+
+**Data flow on every user action**
+
+```mermaid
+flowchart LR
+    A[User action\nsubmit / delete / edit] --> B[Update state object]
+    B --> C[Save to localStorage]
+    C --> D[renderAll rebuilds the page]
+    D -.next action.-> A
+```
+
 ## Tech and concepts
 
 - Semantic HTML5

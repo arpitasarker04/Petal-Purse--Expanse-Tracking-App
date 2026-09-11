@@ -11,7 +11,37 @@
 <link rel="stylesheet" href="css/style.css">
     <body>
        <div class ="page">
-        <header class ="hero">
+
+            <header class="hero">
+  <svg class="hero-flourish" viewBox="0 0 120 60" aria-hidden="true">
+    <circle cx="20" cy="30" r="4" fill="var(--gold)"/>
+    <circle cx="34" cy="18" r="2.5" fill="var(--lavender)"/>
+    <circle cx="100" cy="24" r="3.5" fill="var(--rose-deep)"/>
+    <circle cx="88" cy="42" r="2" fill="var(--sage)"/>
+    <circle cx="10" cy="12" r="1.8" fill="var(--dusty-blue)"/>
+  </svg>
+
+  <p class="hero-label">Petal Purse</p>
+  <h1 class="hero-total" id="totalSpent">$0.00</h1>
+  <p class="hero-sub">spent so far this month</p>
+
+  <div class="budget-row">
+    <label for="budgetInput">Monthly goal</label>
+    <div class="budget-edit">
+      <span class="budget-currency">$</span>
+      <input type="number" id="budgetInput" min="0" step="1" inputmode="decimal" />
+    </div>
+  </div>
+
+  <div class="progress-track" role="progressbar" aria-label="Spending against monthly goal" aria-valuemin="0" aria-valuemax="100" id="progressTrack">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+  <p class="progress-note" id="progressNote"></p>
+
+  <svg class="hero-wave" viewBox="0 0 500 40" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0,20 C 60,40 90,0 150,18 C 210,36 240,4 300,20 C 360,36 390,4 450,20 C 470,26 490,22 500,18 L500,40 L0,40 Z" fill="var(--paper)"/>
+  </svg>
+
         </header>
         <main>
 

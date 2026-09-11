@@ -1,0 +1,126 @@
+:root {
+  --paper: #FDF3F6;
+  --card: #FFFFFF;
+  --rose-deep: #C9668B;
+  --rose-soft: #E8919F;
+  --lavender: #B79FCE;
+  --gold: #D9A85C;
+  --sage: #A8B98C;
+  --dusty-blue: #7FA9C9;
+  --mauve-grey: #9C8290;
+
+  --ink: #4A3540;
+  --ink-muted: #8C7480;
+  --line: #F0DCE4;
+  --alert: #B5495B;
+
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "Quicksand", "Segoe UI", sans-serif;
+
+  --radius-lg: 28px;
+  --radius-md: 18px;
+  --radius-sm: 10px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.page {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 0 20px 60px;
+}
+
+h1, h2 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  margin: 0;
+  color: var(--ink);
+}
+.hero {
+  position: relative;
+  background: linear-gradient(180deg, #F6D9E2 0%, #F3C8D6 100%);
+  margin: 0 -20px;
+  padding: 36px 20px 0;
+  text-align: center;
+  overflow: hidden;
+}
+
+.hero-flourish { width: 140px; height: 60px; display: block; margin: 0 auto 6px; }
+
+.hero-label {
+  font-family: var(--font-display);
+  font-size: 15px;
+  color: var(--rose-deep);
+  margin: 0 0 4px;
+}
+
+.hero-total {
+  font-size: clamp(2.6rem, 9vw, 3.4rem);
+  color: var(--ink);
+}
+
+.hero-sub { margin: 4px 0 22px; color: var(--ink-muted); font-size: 14px; }
+
+.budget-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--ink-muted);
+  margin-bottom: 10px;
+}
+
+.budget-edit {
+  display: flex;
+  align-items: center;
+  background: rgba(255,255,255,0.55);
+  border-radius: 999px;
+  padding: 2px 10px;
+}
+
+.budget-currency { color: var(--ink-muted); font-size: 13px; }
+
+#budgetInput {
+  width: 64px;
+  border: none;
+  background: transparent;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--ink);
+  padding: 4px 2px;
+}
+#budgetInput:focus-visible { outline: 2px solid var(--rose-deep); border-radius: 6px; }
+
+.progress-track {
+  max-width: 320px;
+  margin: 0 auto;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.5);
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--rose-deep);
+  width: 0%;
+  transition: width 0.4s ease;
+}
+.progress-fill.over { background: var(--alert); }
+
+.progress-note { font-size: 12.5px; color: var(--ink-muted); margin: 8px 0 0; }
+
+.hero-wave { display: block; width: 100%; height: 32px; margin-top: 24px; }
