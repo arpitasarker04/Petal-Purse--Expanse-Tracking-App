@@ -228,7 +228,11 @@ h1, h2 {
   width: 0%;
   transition: width 0.4s ease;
 }
+.progress-fill.warning { background: var(--gold); }
 .progress-fill.over { background: var(--alert); }
+
+.progress-note.warning { color: var(--gold); font-weight: 600; }
+.progress-note.over { color: var(--alert); font-weight: 600; }
 
 .progress-note {
   font-size: 12.5px;

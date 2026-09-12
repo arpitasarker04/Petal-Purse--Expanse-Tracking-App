@@ -4,6 +4,7 @@
   var STORAGE_KEY = "petalPurse.expenses";
   var BUDGET_KEY = "petalPurse.budget";
   var DEFAULT_BUDGET = 500;
+  var WARNING_THRESHOLD = 0.8; // warn once 80% of the budget is spent
 
   var PENCIL_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4l11-11-4-4L4 16v4Z"/><path d="M13.5 6.5l4 4"/></svg>';
 
@@ -106,28 +107,36 @@
   }
 
   function renderHero() {
-    var monthTotal = currentMonthExpenses().reduce(function (sum, e) {
-      return sum + e.amount;
-    }, 0);
+  var monthTotal = currentMonthExpenses().reduce(function (sum, e) {
+    return sum + e.amount;
+  }, 0);
 
-    els.totalSpent.textContent = formatCurrency(monthTotal);
-    els.budgetInput.value = state.budget;
+  els.totalSpent.textContent = formatCurrency(monthTotal);
+  els.budgetInput.value = state.budget;
 
-    var pct = state.budget > 0 ? Math.min(100, (monthTotal / state.budget) * 100) : 0;
-    els.progressFill.style.width = pct + "%";
+  var rawPct = state.budget > 0 ? (monthTotal / state.budget) * 100 : 0;
+  var pct = Math.min(100, rawPct);
+  els.progressFill.style.width = pct + "%";
+  els.progressTrack.setAttribute("aria-valuenow", Math.round(pct));
 
-    var over = monthTotal > state.budget && state.budget > 0;
-    els.progressFill.classList.toggle("over", over);
-    els.progressTrack.setAttribute("aria-valuenow", Math.round(pct));
+  var over = state.budget > 0 && rawPct >= 100;
+  var warning = state.budget > 0 && !over && rawPct >= WARNING_THRESHOLD * 100;
 
-    if (state.budget <= 0) {
-      els.progressNote.textContent = "Set a monthly goal to track your progress.";
-    } else if (over) {
-      els.progressNote.textContent = formatCurrency(monthTotal - state.budget) + " over your goal this month.";
-    } else {
-      els.progressNote.textContent = formatCurrency(state.budget - monthTotal) + " left before you hit your goal.";
-    }
+  els.progressFill.classList.toggle("over", over);
+  els.progressFill.classList.toggle("warning", warning);
+  els.progressNote.classList.toggle("over", over);
+  els.progressNote.classList.toggle("warning", warning);
+
+  if (state.budget <= 0) {
+    els.progressNote.textContent = "Set a monthly goal to track your progress.";
+  } else if (over) {
+    els.progressNote.textContent = formatCurrency(monthTotal - state.budget) + " over your goal this month.";
+  } else if (warning) {
+    els.progressNote.textContent = "Heads up — only " + formatCurrency(state.budget - monthTotal) + " left before your goal.";
+  } else {
+    els.progressNote.textContent = formatCurrency(state.budget - monthTotal) + " left before you hit your goal.";
   }
+}
 
   function renderBreakdown() {
     var monthExpenses = currentMonthExpenses();
