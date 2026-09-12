@@ -1,109 +1,120 @@
-<!DOCTYPE html>
-<html lang = "en">
-    <head>
-        <meta charset = "UTF-8" />
-        <meta name = "viewport" content="width = device-width, initial-scale=1.0" />
-        <title>Petal Purse</title>
-    </head>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Petal Purse — a softer way to track spending</title>
+<meta name="description" content="A gentle, girly expense tracker. Log spending, watch it bloom into categories, all stored right in your browser." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
-    <body>
-       <div class ="page">
+</head>
+<body>
 
-            <header class="hero">
-  <svg class="hero-flourish" viewBox="0 0 120 60" aria-hidden="true">
-    <circle cx="20" cy="30" r="4" fill="var(--gold)"/>
-    <circle cx="34" cy="18" r="2.5" fill="var(--lavender)"/>
-    <circle cx="100" cy="24" r="3.5" fill="var(--rose-deep)"/>
-    <circle cx="88" cy="42" r="2" fill="var(--sage)"/>
-    <circle cx="10" cy="12" r="1.8" fill="var(--dusty-blue)"/>
-  </svg>
+<div class="page">
 
-  <p class="hero-label">Petal Purse</p>
-  <h1 class="hero-total" id="totalSpent">$0.00</h1>
-  <p class="hero-sub">spent so far this month</p>
+  <header class="hero">
+    <svg class="hero-flourish" viewBox="0 0 120 60" aria-hidden="true">
+      <circle cx="20" cy="30" r="4" fill="var(--gold)"/>
+      <circle cx="34" cy="18" r="2.5" fill="var(--lavender)"/>
+      <circle cx="100" cy="24" r="3.5" fill="var(--rose-deep)"/>
+      <circle cx="88" cy="42" r="2" fill="var(--sage)"/>
+      <circle cx="10" cy="12" r="1.8" fill="var(--dusty-blue)"/>
+    </svg>
 
-  <div class="budget-row">
-    <label for="budgetInput">Monthly goal</label>
-    <div class="budget-edit">
-      <span class="budget-currency">$</span>
-      <input type="number" id="budgetInput" min="0" step="1" inputmode="decimal" />
+    <p class="hero-label">Petal Purse</p>
+    <h1 class="hero-total" id="totalSpent">$0.00</h1>
+    <p class="hero-sub">spent so far this month</p>
+
+    <div class="budget-row">
+      <label for="budgetInput">Monthly goal</label>
+      <div class="budget-edit">
+        <span class="budget-currency">$</span>
+        <input type="number" id="budgetInput" min="0" step="1" inputmode="decimal" />
+      </div>
     </div>
-  </div>
 
-  <div class="progress-track" role="progressbar" aria-label="Spending against monthly goal" aria-valuemin="0" aria-valuemax="100" id="progressTrack">
-    <div class="progress-fill" id="progressFill"></div>
-  </div>
-  <p class="progress-note" id="progressNote"></p>
+    <div class="progress-track" role="progressbar" aria-label="Spending against monthly goal" aria-valuemin="0" aria-valuemax="100" id="progressTrack">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <p class="progress-note" id="progressNote"></p>
 
-  <svg class="hero-wave" viewBox="0 0 500 40" preserveAspectRatio="none" aria-hidden="true">
-    <path d="M0,20 C 60,40 90,0 150,18 C 210,36 240,4 300,20 C 360,36 390,4 450,20 C 470,26 490,22 500,18 L500,40 L0,40 Z" fill="var(--paper)"/>
-  </svg>
+    <svg class="hero-wave" viewBox="0 0 500 40" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,20 C 60,40 90,0 150,18 C 210,36 240,4 300,20 C 360,36 390,4 450,20 C 470,26 490,22 500,18 L500,40 L0,40 Z" fill="var(--paper)"/>
+    </svg>
+  </header>
 
-        </header>
-        <main>
+  <main>
 
-  <section class="card">
-    <h2>Add an expense</h2>
-    <form id="expenseForm" novalidate>
+    <section class="card">
+      <h2>Add an expense</h2>
+      <form id="expenseForm" novalidate>
 
-      <div class="field-row">
-        <div class="field">
-          <label for="amountInput">Amount</label>
-          <div class="amount-shell">
-            <span>$</span>
-            <input type="number" id="amountInput" min="0.01" step="0.01" placeholder="0.00" required />
+        <div class="field-row">
+          <div class="field">
+            <label for="amountInput">Amount</label>
+            <div class="amount-shell">
+              <span>$</span>
+              <input type="number" id="amountInput" min="0.01" step="0.01" placeholder="0.00" required />
+            </div>
+          </div>
+          <div class="field">
+            <label for="dateInput">Date</label>
+            <input type="date" id="dateInput" required />
           </div>
         </div>
+
         <div class="field">
-          <label for="dateInput">Date</label>
-          <input type="date" id="dateInput" required />
+          <label id="categoryLabel">Category</label>
+          <div class="chip-row" id="categoryChips" role="group" aria-labelledby="categoryLabel"></div>
         </div>
-      </div>
 
-      <div class="field">
-        <label id="categoryLabel">Category</label>
-        <div class="chip-row" id="categoryChips" role="group" aria-labelledby="categoryLabel"></div>
-      </div>
+        <div class="field">
+          <label for="noteInput">What was it for?</label>
+          <input type="text" id="noteInput" placeholder="iced matcha, new mascara, train ticket…" maxlength="60" />
+        </div>
 
-      <div class="field">
-        <label for="noteInput">What was it for?</label>
-        <input type="text" id="noteInput" placeholder="iced matcha, new mascara, train ticket…" maxlength="60" />
-      </div>
+        <div class="form-footer">
+          <button type="submit" class="btn-submit" id="submitBtn">Add to ledger</button>
+          <button type="button" class="btn-cancel-edit" id="cancelEditBtn" hidden>Cancel edit</button>
+        </div>
+      </form>
+    </section>
 
-      <button type="submit" class="btn-submit">Add to ledger</button>
-    </form>
-  </section>
-
-  <section class="card">
-    <h2>Where it's going</h2>
-    <div class="breakdown">
-      <div class="donut-wrap">
-        <div class="donut" id="donutChart">
-          <div class="donut-center">
-            <span class="donut-amount" id="donutCenterAmount">$0</span>
-            <span class="donut-label">total</span>
+    <section class="card">
+      <h2>Where it's going</h2>
+      <div class="breakdown">
+        <div class="donut-wrap">
+          <div class="donut" id="donutChart">
+            <div class="donut-center">
+              <span class="donut-amount" id="donutCenterAmount">$0</span>
+              <span class="donut-label">total</span>
+            </div>
           </div>
         </div>
+        <ul class="legend" id="legendList"></ul>
       </div>
-      <ul class="legend" id="legendList"></ul>
-    </div>
-    <p class="empty-state" id="breakdownEmpty">Nothing logged yet this month — your chart will bloom once you add something.</p>
-  </section>
+      <p class="empty-state" id="breakdownEmpty">Nothing logged yet this month — your chart will bloom once you add something.</p>
+    </section>
 
-  <section class="card">
-    <h2>Your ledger</h2>
-    <div class="ledger-list" id="ledgerList"></div>
-    <p class="empty-state" id="ledgerEmpty">Your ledger is empty. Add your first entry above.</p>
-  </section>
+    <section class="card">
+      <div class="ledger-header">
+        <h2>Your ledger</h2>
+        <button type="button" class="btn-text" id="exportBtn">Export CSV</button>
+      </div>
+      <div class="ledger-list" id="ledgerList"></div>
+      <p class="empty-state" id="ledgerEmpty">Your ledger is empty. Add your first entry above.</p>
+    </section>
 
-</main>
-        <footer>
-            <p> Made with care. Everything here stays in your browser.</p>
-        </footer>
-       </div> 
-       <script src="js/app.js"></script>
-    </body>
+  </main>
+
+  <footer>
+    <p>Made with care. Everything here stays in your browser — nothing is sent anywhere.</p>
+  </footer>
+
+</div>
+
+<script src="js/app.js"></script>
+</body>
 </html>

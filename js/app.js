@@ -5,6 +5,8 @@
   var BUDGET_KEY = "petalPurse.budget";
   var DEFAULT_BUDGET = 500;
 
+  var PENCIL_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4l11-11-4-4L4 16v4Z"/><path d="M13.5 6.5l4 4"/></svg>';
+
   var CATEGORIES = [
     { id: "food", name: "Food & drink", color: "var(--rose-soft)", hex: "#E8919F",
       icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9h11v5a5.5 5.5 0 0 1-5.5 5.5h0A5.5 5.5 0 0 1 6 14V9Z"/><path d="M17 10h1.5a2.5 2.5 0 0 1 0 5H17"/><path d="M9 3.5v2M12 3.5v2M15 3.5v2"/></svg>' },
@@ -23,29 +25,48 @@
   ];
 
   var els = {};
-  var state = { expenses: [], budget: DEFAULT_BUDGET, selectedCategory: CATEGORIES[0].id };
+  var state = {
+    expenses: [],
+    budget: DEFAULT_BUDGET,
+    selectedCategory: CATEGORIES[0].id,
+    editingId: null
+  };
 
   function load() {
     try {
       var raw = localStorage.getItem(STORAGE_KEY);
       state.expenses = raw ? JSON.parse(raw) : [];
-    } catch (e) { state.expenses = []; }
+    } catch (e) {
+      state.expenses = [];
+    }
     try {
       var b = localStorage.getItem(BUDGET_KEY);
       state.budget = b ? parseFloat(b) : DEFAULT_BUDGET;
-    } catch (e) { state.budget = DEFAULT_BUDGET; }
+    } catch (e) {
+      state.budget = DEFAULT_BUDGET;
+    }
   }
 
-  function saveExpenses() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state.expenses)); }
-  function saveBudget() { localStorage.setItem(BUDGET_KEY, String(state.budget)); }
+  function saveExpenses() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state.expenses));
+  }
+
+  function saveBudget() {
+    localStorage.setItem(BUDGET_KEY, String(state.budget));
+  }
 
   function findCategory(id) {
-    for (var i = 0; i < CATEGORIES.length; i++) if (CATEGORIES[i].id === id) return CATEGORIES[i];
+    for (var i = 0; i < CATEGORIES.length; i++) {
+      if (CATEGORIES[i].id === id) return CATEGORIES[i];
+    }
     return CATEGORIES[CATEGORIES.length - 1];
   }
 
   function formatCurrency(n) {
-    return "$" + (Math.round(n * 100) / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return "$" + (Math.round(n * 100) / 100).toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
   }
 
   function isSameMonth(dateStr, ref) {
@@ -55,13 +76,17 @@
 
   function currentMonthExpenses() {
     var now = new Date();
-    return state.expenses.filter(function (e) { return isSameMonth(e.date, now); });
+    return state.expenses.filter(function (e) {
+      return isSameMonth(e.date, now);
+    });
   }
 
   function formatDate(dateStr) {
     var d = new Date(dateStr + "T00:00:00");
     return d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
   }
+
+  /* ---------------- rendering ---------------- */
 
   function renderChips() {
     els.categoryChips.innerHTML = "";
@@ -81,7 +106,10 @@
   }
 
   function renderHero() {
-    var monthTotal = currentMonthExpenses().reduce(function (sum, e) { return sum + e.amount; }, 0);
+    var monthTotal = currentMonthExpenses().reduce(function (sum, e) {
+      return sum + e.amount;
+    }, 0);
+
     els.totalSpent.textContent = formatCurrency(monthTotal);
     els.budgetInput.value = state.budget;
 
@@ -103,16 +131,24 @@
 
   function renderBreakdown() {
     var monthExpenses = currentMonthExpenses();
-    var totals = {}, total = 0;
-    monthExpenses.forEach(function (e) { totals[e.category] = (totals[e.category] || 0) + e.amount; total += e.amount; });
+    var totals = {};
+    var total = 0;
+
+    monthExpenses.forEach(function (e) {
+      totals[e.category] = (totals[e.category] || 0) + e.amount;
+      total += e.amount;
+    });
 
     var hasData = total > 0;
     els.breakdownEmpty.classList.toggle("visible", !hasData);
     els.donutChart.style.display = hasData ? "flex" : "none";
     els.legendList.style.display = hasData ? "flex" : "none";
+
     if (!hasData) return;
 
-    var gradientParts = [], cursor = 0;
+    var gradientParts = [];
+    var cursor = 0;
+
     els.legendList.innerHTML = "";
 
     CATEGORIES.forEach(function (cat) {
@@ -140,7 +176,10 @@
   }
 
   function renderLedger() {
-    var sorted = state.expenses.slice().sort(function (a, b) { return b.date.localeCompare(a.date) || b.id - a.id; });
+    var sorted = state.expenses.slice().sort(function (a, b) {
+      return b.date.localeCompare(a.date) || b.id - a.id;
+    });
+
     els.ledgerEmpty.classList.toggle("visible", sorted.length === 0);
     els.ledgerList.innerHTML = "";
 
@@ -155,6 +194,7 @@
           '<div class="ledger-meta">' + cat.name + " · " + formatDate(e.date) + "</div>" +
         "</div>" +
         '<div class="ledger-amount">' + formatCurrency(e.amount) + "</div>" +
+        '<button class="ledger-edit" aria-label="Edit entry" data-id="' + e.id + '">' + PENCIL_ICON + "</button>" +
         '<button class="ledger-delete" aria-label="Delete entry" data-id="' + e.id + '">&times;</button>';
       els.ledgerList.appendChild(row);
     });
@@ -166,30 +206,120 @@
     return div.innerHTML;
   }
 
-  function renderAll() { renderHero(); renderBreakdown(); renderLedger(); }
+  function renderAll() {
+    renderHero();
+    renderBreakdown();
+    renderLedger();
+  }
+
+  /* ---------------- editing ---------------- */
+
+  function startEdit(id) {
+    var entry = state.expenses.find(function (e) { return e.id === id; });
+    if (!entry) return;
+    state.editingId = id;
+    els.amountInput.value = entry.amount;
+    els.dateInput.value = entry.date;
+    els.noteInput.value = entry.note;
+    state.selectedCategory = entry.category;
+    renderChips();
+    els.submitBtn.textContent = "Update expense";
+    els.cancelEditBtn.hidden = false;
+    els.amountInput.focus();
+  }
+
+  function cancelEdit() {
+    state.editingId = null;
+    els.submitBtn.textContent = "Add to ledger";
+    els.cancelEditBtn.hidden = true;
+    els.expenseForm.reset();
+    els.dateInput.value = todayStr();
+    state.selectedCategory = CATEGORIES[0].id;
+    renderChips();
+  }
+
+  /* ---------------- CSV export ---------------- */
+
+  function exportCSV() {
+    var rows = [["Date", "Category", "Note", "Amount"]];
+    state.expenses.slice().sort(function (a, b) {
+      return a.date.localeCompare(b.date);
+    }).forEach(function (e) {
+      var cat = findCategory(e.category);
+      rows.push([e.date, cat.name, e.note || "", e.amount.toFixed(2)]);
+    });
+
+    var csv = rows.map(function (r) {
+      return r.map(function (field) {
+        var f = String(field).replace(/"/g, '""');
+        return /[",\n]/.test(f) ? '"' + f + '"' : f;
+      }).join(",");
+    }).join("\n");
+
+    var blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = "petal-purse-expenses.csv";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  /* ---------------- events ---------------- */
 
   function handleSubmit(evt) {
     evt.preventDefault();
     var amount = parseFloat(els.amountInput.value);
-    if (!amount || amount <= 0) { els.amountInput.focus(); return; }
+    if (!amount || amount <= 0) {
+      els.amountInput.focus();
+      return;
+    }
     var date = els.dateInput.value || todayStr();
 
-    state.expenses.push({ id: Date.now(), amount: amount, category: state.selectedCategory, note: els.noteInput.value.trim(), date: date });
+    if (state.editingId) {
+      var entry = state.expenses.find(function (e) { return e.id === state.editingId; });
+      if (entry) {
+        entry.amount = amount;
+        entry.category = state.selectedCategory;
+        entry.note = els.noteInput.value.trim();
+        entry.date = date;
+      }
+      cancelEdit();
+    } else {
+      state.expenses.push({
+        id: Date.now(),
+        amount: amount,
+        category: state.selectedCategory,
+        note: els.noteInput.value.trim(),
+        date: date
+      });
+      els.amountInput.value = "";
+      els.noteInput.value = "";
+      els.amountInput.focus();
+    }
 
     saveExpenses();
-    els.amountInput.value = "";
-    els.noteInput.value = "";
-    els.amountInput.focus();
     renderAll();
   }
 
   function handleLedgerClick(evt) {
-    var btn = evt.target.closest(".ledger-delete");
-    if (!btn) return;
-    var id = Number(btn.getAttribute("data-id"));
-    state.expenses = state.expenses.filter(function (e) { return e.id !== id; });
-    saveExpenses();
-    renderAll();
+    var editBtn = evt.target.closest(".ledger-edit");
+    if (editBtn) {
+      startEdit(Number(editBtn.getAttribute("data-id")));
+      return;
+    }
+    var delBtn = evt.target.closest(".ledger-delete");
+    if (delBtn) {
+      var id = Number(delBtn.getAttribute("data-id"));
+      state.expenses = state.expenses.filter(function (e) {
+        return e.id !== id;
+      });
+      if (state.editingId === id) cancelEdit();
+      saveExpenses();
+      renderAll();
+    }
   }
 
   function handleBudgetChange() {
@@ -217,21 +347,27 @@
     els.dateInput = document.getElementById("dateInput");
     els.noteInput = document.getElementById("noteInput");
     els.categoryChips = document.getElementById("categoryChips");
+    els.submitBtn = document.getElementById("submitBtn");
+    els.cancelEditBtn = document.getElementById("cancelEditBtn");
     els.donutChart = document.getElementById("donutChart");
     els.donutCenterAmount = document.getElementById("donutCenterAmount");
     els.legendList = document.getElementById("legendList");
     els.breakdownEmpty = document.getElementById("breakdownEmpty");
     els.ledgerList = document.getElementById("ledgerList");
     els.ledgerEmpty = document.getElementById("ledgerEmpty");
+    els.exportBtn = document.getElementById("exportBtn");
 
     load();
     els.dateInput.value = todayStr();
+
     renderChips();
     renderAll();
 
     els.expenseForm.addEventListener("submit", handleSubmit);
     els.ledgerList.addEventListener("click", handleLedgerClick);
     els.budgetInput.addEventListener("change", handleBudgetChange);
+    els.cancelEditBtn.addEventListener("click", cancelEdit);
+    els.exportBtn.addEventListener("click", exportCSV);
   }
 
   document.addEventListener("DOMContentLoaded", init);
