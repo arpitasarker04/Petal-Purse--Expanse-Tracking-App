@@ -302,7 +302,6 @@
 
     saveExpenses();
     renderAll();
-    initSplash();
   }
 
   function handleLedgerClick(evt) {
@@ -337,6 +336,30 @@
     return d.getFullYear() + "-" + m + "-" + day;
   }
 
+  /* ---------------- splash screen ---------------- */
+
+  function initSplash() {
+    var splash = document.getElementById("splashScreen");
+    if (!splash) return;
+
+    var dismissed = false;
+    function dismiss() {
+      if (dismissed) return;
+      dismissed = true;
+      splash.classList.add("hide");
+      splash.removeEventListener("click", dismiss);
+    }
+
+    var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var delay = reduceMotion ? 0 : 1500;
+
+    setTimeout(dismiss, delay);
+    // Safety net: if anything stalls the timer (backgrounded tab, etc.), clicking always works.
+    splash.addEventListener("click", dismiss);
+    // Extra safety net: never let it stay up longer than 4 seconds no matter what.
+    setTimeout(dismiss, 4000);
+  }
+
   function init() {
     els.totalSpent = document.getElementById("totalSpent");
     els.budgetInput = document.getElementById("budgetInput");
@@ -363,6 +386,7 @@
 
     renderChips();
     renderAll();
+    initSplash();
 
     els.expenseForm.addEventListener("submit", handleSubmit);
     els.ledgerList.addEventListener("click", handleLedgerClick);
@@ -373,12 +397,3 @@
 
   document.addEventListener("DOMContentLoaded", init);
 })();
-function initSplash() {
-  var splash = document.getElementById("splashScreen");
-  if (!splash) return;
-  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var delay = reduceMotion ? 0 : 1500;
-  setTimeout(function () {
-    splash.classList.add("hide");
-  }, delay);
-}

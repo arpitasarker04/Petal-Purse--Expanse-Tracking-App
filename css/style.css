@@ -55,6 +55,66 @@ h1, h2 {
 }
 
 /* ---------------------------------------------------
+   Splash screen
+--------------------------------------------------- */
+.splash {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: linear-gradient(180deg, #F6D9E2 0%, #F3C8D6 100%);
+  transition: opacity 0.5s ease;
+  cursor: pointer;
+}
+.splash.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.splash-bloom { width: 96px; height: 96px; overflow: visible; }
+
+@keyframes petalBloom {
+  from { transform: scale(0); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.petal {
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(0);
+  opacity: 0;
+  animation: petalBloom 0.45s cubic-bezier(.34,1.56,.64,1) forwards;
+}
+.petal.p1 { animation-delay: 0s; }
+.petal.p2 { animation-delay: 0.06s; }
+.petal.p3 { animation-delay: 0.12s; }
+.petal.p4 { animation-delay: 0.18s; }
+.petal.p5 { animation-delay: 0.24s; }
+.petal.p6 { animation-delay: 0.3s; }
+
+.splash-center {
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(0);
+  opacity: 0;
+  animation: petalBloom 0.4s ease 0.36s forwards;
+}
+
+.splash-word {
+  font-family: var(--font-display);
+  font-size: 22px;
+  color: var(--ink);
+  margin: 0;
+  opacity: 0;
+  transform: translateY(8px);
+  animation: heroReveal 0.5s ease 0.55s forwards;
+}
+
+/* ---------------------------------------------------
    Animations
 --------------------------------------------------- */
 @keyframes heroReveal {
@@ -71,12 +131,12 @@ h1, h2 {
 .budget-row, .progress-track, .progress-note {
   animation: heroReveal 0.5s ease both;
 }
-.hero-label      { animation-delay: 0.05s; }
-.hero-total      { animation-delay: 0.10s; }
-.hero-sub        { animation-delay: 0.15s; }
-.budget-row      { animation-delay: 0.20s; }
-.progress-track  { animation-delay: 0.25s; }
-.progress-note   { animation-delay: 0.30s; }
+.hero-label      { animation-delay: 1.55s; }
+.hero-total      { animation-delay: 1.60s; }
+.hero-sub        { animation-delay: 1.65s; }
+.budget-row      { animation-delay: 1.70s; }
+.progress-track  { animation-delay: 1.75s; }
+.progress-note   { animation-delay: 1.80s; }
 
 /* ---------------------------------------------------
    Hero
@@ -544,64 +604,4 @@ footer {
   .breakdown { flex-direction: column; align-items: center; }
   .legend { width: 100%; }
   .form-footer { flex-wrap: wrap; }
-}
-
-/* ---------------------------------------------------
-   Splash screen
---------------------------------------------------- */
-.splash {
-  position: fixed;
-  inset: 0;
-  z-index: 999;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-  background: linear-gradient(180deg, #F6D9E2 0%, #F3C8D6 100%);
-  transition: opacity 0.5s ease, visibility 0.5s ease;
-}
-.splash.hide {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
-
-.splash-bloom { width: 96px; height: 96px; }
-
-@keyframes petalBloom {
-  from { transform: scale(0); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-
-.petal {
-  transform-box: view-box;
-  transform-origin: 60px 60px;
-  transform: scale(0);
-  opacity: 0;
-  animation: petalBloom 0.45s cubic-bezier(.34,1.56,.64,1) forwards;
-}
-.petal.p1 { animation-delay: 0s; }
-.petal.p2 { animation-delay: 0.06s; }
-.petal.p3 { animation-delay: 0.12s; }
-.petal.p4 { animation-delay: 0.18s; }
-.petal.p5 { animation-delay: 0.24s; }
-.petal.p6 { animation-delay: 0.30s; }
-
-.splash-center {
-  transform-box: view-box;
-  transform-origin: 60px 60px;
-  transform: scale(0);
-  opacity: 0;
-  animation: petalBloom 0.4s ease 0.36s forwards;
-}
-
-.splash-word {
-  font-family: var(--font-display);
-  font-size: 22px;
-  color: var(--ink);
-  margin: 0;
-  opacity: 0;
-  transform: translateY(8px);
-  animation: heroReveal 0.5s ease 0.55s forwards;
 }
