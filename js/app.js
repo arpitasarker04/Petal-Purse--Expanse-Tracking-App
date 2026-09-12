@@ -302,6 +302,7 @@
 
     saveExpenses();
     renderAll();
+    initSplash();
   }
 
   function handleLedgerClick(evt) {
@@ -372,3 +373,12 @@
 
   document.addEventListener("DOMContentLoaded", init);
 })();
+function initSplash() {
+  var splash = document.getElementById("splashScreen");
+  if (!splash) return;
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var delay = reduceMotion ? 0 : 1500;
+  setTimeout(function () {
+    splash.classList.add("hide");
+  }, delay);
+}
